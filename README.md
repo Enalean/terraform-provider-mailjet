@@ -1,0 +1,3 @@
+# terraform-provider-mailjet
+
+TBD
