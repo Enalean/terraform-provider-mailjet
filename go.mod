@@ -4,6 +4,8 @@ go 1.21
 
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.4.2
+	github.com/hashicorp/terraform-plugin-framework-validators v0.12.0
+	github.com/mailjet/mailjet-apiv3-go/v3 v3.2.0
 	github.com/mailjet/mailjet-apiv3-go/v4 v4.0.1
 )
 
@@ -18,7 +20,6 @@ require (
 	github.com/hashicorp/terraform-registry-address v0.2.2 // indirect
 	github.com/hashicorp/terraform-svchost v0.1.1 // indirect
 	github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb // indirect
-	github.com/mailjet/mailjet-apiv3-go/v3 v3.2.0 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mitchellh/go-testing-interface v1.14.1 // indirect
