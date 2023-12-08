@@ -4,7 +4,6 @@ go 1.21
 
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.4.2
-	github.com/hashicorp/terraform-plugin-framework-validators v0.12.0
 	github.com/mailjet/mailjet-apiv3-go/v3 v3.2.0
 	github.com/mailjet/mailjet-apiv3-go/v4 v4.0.1
 )
@@ -30,6 +29,6 @@ require (
 	golang.org/x/sys v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230525234030-28d5490b6b19 // indirect
-	google.golang.org/grpc v1.57.0 // indirect
+	google.golang.org/grpc v1.57.1 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 )
