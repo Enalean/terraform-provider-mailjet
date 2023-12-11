@@ -13,6 +13,14 @@ env:
   NIXPKGS_ALLOW_UNFREE: 1
 
 jobs:
+  build:
+    runs-on: ubuntu-22.04
+    name: Build
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: cachix/install-nix-action@7ac1ec25491415c381d9b62f0657c7a028df52a7
+      - run: nix-shell --run 'go build'
+      - run: ./terraform-provider-mailjet --help
   static_analysis:
     runs-on: ubuntu-22.04
     name: Run static analysis and linting
@@ -31,18 +39,3 @@ jobs:
         run: |
           git diff --compact-summary --exit-code || \
             (echo; echo "Unexpected difference in directories after code generation. Run 'go generate ./...' command and commit."; exit 1)
-  test_release:
-    runs-on: ubuntu-22.04
-    permissions:
-      id-token: write
-      contents: read
-    name: Test release
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
-      - uses: cachix/install-nix-action@7ac1ec25491415c381d9b62f0657c7a028df52a7
-      - run: nix-shell --run 'goreleaser --snapshot --clean'
-      - uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32
-        with:
-          name: test-release-dist
-          path: dist/**/*
-          retention-days: 2
