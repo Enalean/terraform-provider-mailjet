@@ -13,5 +13,7 @@ pkgs.mkShellNoCC {
     pkgs.syft
     pkgs.cosign
     pkgs.golangci-lint
+    pkgs.terraform
+    pkgs.terraform-plugin-docs
   ];
 }
