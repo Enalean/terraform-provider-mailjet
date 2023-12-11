@@ -99,5 +99,6 @@ func (p *mailjetProvider) DataSources(_ context.Context) []func() datasource.Dat
 func (p *mailjetProvider) Resources(_ context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewSenderResource,
+		NewSenderValidateResource,
 	}
 }
