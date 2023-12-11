@@ -42,6 +42,7 @@ func (p *mailjetProvider) Metadata(_ context.Context, _ provider.MetadataRequest
 
 func (p *mailjetProvider) Schema(_ context.Context, _ provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
+		Description: "Interact with Mailjet.",
 		Attributes: map[string]schema.Attribute{
 			"base_url": schema.StringAttribute{
 				Optional:    true,
