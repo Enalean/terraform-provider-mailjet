@@ -188,9 +188,6 @@ func (r *senderResource) Create(ctx context.Context, req resource.CreateRequest,
 
 	diags = resp.State.Set(ctx, plan)
 	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
 }
 
 func (r *senderResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
