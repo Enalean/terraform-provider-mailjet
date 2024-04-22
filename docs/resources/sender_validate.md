@@ -33,3 +33,7 @@ resource "mailjet_sender_validate" "sender_validate_example" {
 ### Required
 
 - `id` (Number) Unique numeric ID for the sender you want to validate.
+
+### Optional
+
+- `wait_for` (String) When specified, the provider will make multiple attempts to validate the resource until the specified duration is reached. One attempt is made per second.

@@ -21,6 +21,13 @@ jobs:
       - uses: cachix/install-nix-action@7ac1ec25491415c381d9b62f0657c7a028df52a7
       - run: nix-shell --run 'go build'
       - run: ./terraform-provider-mailjet --help
+  unit_tests:
+    runs-on: ubuntu-22.04
+    name: Run unit tests
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: cachix/install-nix-action@7ac1ec25491415c381d9b62f0657c7a028df52a7
+      - run: nix-shell --run 'go test -v ./mailjet'
   static_analysis:
     runs-on: ubuntu-22.04
     name: Run static analysis and linting

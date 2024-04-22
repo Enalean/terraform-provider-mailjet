@@ -3,11 +3,13 @@ package mailjet
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/mailjet/mailjet-apiv3-go/v3/resources"
 	"github.com/mailjet/mailjet-apiv3-go/v4"
@@ -58,12 +60,20 @@ func (r *senderValidateResource) Schema(_ context.Context, _ resource.SchemaRequ
 					int64planmodifier.RequiresReplace(),
 				},
 			},
+			"wait_for": schema.StringAttribute{
+				Optional:    true,
+				Description: "When specified, the provider will make multiple attempts to validate the resource until the specified duration is reached. One attempt is made per second.",
+				Validators: []validator.String{
+					TimeDurationAtLeast1Sec(),
+				},
+			},
 		},
 	}
 }
 
 type senderValidateResourceModel struct {
-	ID types.Int64 `tfsdk:"id"`
+	ID      types.Int64  `tfsdk:"id"`
+	WaitFor types.String `tfsdk:"wait_for"`
 }
 
 func (r *senderValidateResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -78,8 +88,23 @@ func (r *senderValidateResource) Create(ctx context.Context, req resource.Create
 		Resource: "sender",
 		ID:       state.ID.ValueInt64(),
 	}
+
+	durationString := state.WaitFor.ValueString()
+	if durationString == "" {
+		durationString = "0s"
+	}
+
+	waitForDuration, err := time.ParseDuration(durationString)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Failed to parse wait_for",
+			err.Error(),
+		)
+		return
+	}
+
 	var responseDataSearch []resources.Sender
-	err := r.client.Get(senderSearchRequest, &responseDataSearch)
+	err = r.client.Get(senderSearchRequest, &responseDataSearch)
 
 	if err == nil && len(responseDataSearch) == 1 && responseDataSearch[0].Status == "Active" {
 		diags := resp.State.Set(ctx, state)
@@ -98,6 +123,19 @@ func (r *senderValidateResource) Create(ctx context.Context, req resource.Create
 	}
 
 	var responseDataValidation []resources.SenderValidate
+
+	startAttempt := time.Now()
+	for {
+		err = r.client.Post(mailjetValidateFullRequest, responseDataValidation)
+
+		if err == nil && len(responseDataValidation) == 1 && responseDataValidation[0].GlobalError == "" {
+			return
+		}
+		if time.Since(startAttempt) > waitForDuration {
+			break
+		}
+		time.Sleep(time.Second)
+	}
 
 	err = r.client.Post(mailjetValidateFullRequest, responseDataValidation)
 	if err != nil {
