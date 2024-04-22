@@ -1,6 +1,6 @@
 module github.com/enalean/terraform-provider-mailjet
 
-go 1.21
+go 1.22
 
 require (
 	github.com/hashicorp/terraform-plugin-framework v1.4.2
