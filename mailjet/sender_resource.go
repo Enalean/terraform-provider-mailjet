@@ -309,5 +309,15 @@ func (r *senderResource) Delete(ctx context.Context, req resource.DeleteRequest,
 }
 
 func (r *senderResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+	id, err := strconv.ParseInt(req.ID, 10, 64)
+
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Error importing item",
+			"Could not import the Mailjet sender, the ID should be an integer: "+err.Error(),
+		)
+		return
+	}
+
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), id)...)
 }
