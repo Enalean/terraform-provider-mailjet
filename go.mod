@@ -3,6 +3,7 @@ module github.com/enalean/terraform-provider-mailjet
 go 1.22
 
 require (
+	github.com/google/go-cmp v0.6.0
 	github.com/hashicorp/terraform-plugin-framework v1.8.0
 	github.com/mailjet/mailjet-apiv3-go/v3 v3.2.0
 	github.com/mailjet/mailjet-apiv3-go/v4 v4.0.1
